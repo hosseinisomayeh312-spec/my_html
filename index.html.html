@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماجراجویی در سرزمین معماها - ریاضی هفتم</title>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 2px solid #334155;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px dashed #475569;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: #a855f7;
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+        }
+
+        .meta-box {
+            background: #334155;
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            height: 14px;
+            background: #334155;
+            border-radius: 7px;
+            overflow: hidden;
+            border: 1px solid #475569;
+            margin-bottom: 25px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.4s ease;
+        }
+
+        .step-panel {
+            display: none;
+        }
+
+        .step-panel.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            background: #1e293b;
+            border: 2px solid #475569;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            outline: none;
+            margin-top: 10px;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #7c3aed, #c026d3);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(124,58,237,0.4);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            display: none;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .feedback.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+            color: #34d399;
+        }
+
+        .feedback.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: #f87171;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        th {
+            background: #334155;
+            color: #a855f7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <header>
+        <h1>🏛️ اداره آموزش و پرورش دهدز</h1>
+        <div class="meta-box">
+            <span>🎮 بازی تعاملی راهبردهای حل مسئله (فصل ۱)</span>
+            <span>✍️ تدوین‌گران: مهدی حسینی و سمیه حسینی</span>
+        </div>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- مرحله ثبت‌نام -->
+    <div id="step-auth" class="step-panel active">
+        <div class="card">
+            <h2>⚔️ به مأموریت معماهای روزمره خوش آمدید!</h2>
+            <p>قهرمان عزیز، برای ورود به بازی نام و کلاس خودت رو وارد کن:</p>
+            <input type="text" id="studentName" placeholder="نام و نام خانوادگی...">
+            <input type="text" id="className" placeholder="نام کلاس (مثلاً: هفتم ۱)..." style="margin-top: 15px;">
+            <button class="btn" onclick="startGame()">شروع بازی 🚀</button>
+        </div>
+    </div>
+
+    <!-- پنل سوالات بازی -->
+    <div id="step-game" class="step-panel">
+        <div class="card">
+            <h3 id="qTitle" style="color: #f43f5e;"></h3>
+            <p id="qText" style="font-size: 1.1rem; line-height: 1.7;"></p>
+            <input type="number" id="userAnswer" placeholder="پاسخ عددی خود را وارد کنید...">
+            <button id="checkBtn" class="btn" onclick="checkAnswer()">بررسی کلید 🔑</button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+        <button id="nextBtn" class="btn" style="display:none; background: linear-gradient(90deg, #10b981, #059669);" onclick="nextQuestion()">مرحله بعدی ➔</button>
+    </div>
+
+    <!-- مرحله پایان و کارنامه -->
+    <div id="step-finish" class="step-panel">
+        <div class="card" style="text-align: center;">
+            <h2 style="color: #34d399;">🏆 تبریک! شما تمام مراحل را با موفقیت پشت سر گذاشتید!</h2>
+            <div id="summaryReport" style="text-align: right; margin: 20px 0; font-size: 1.05rem;"></div>
+        </div>
+
+        <div class="card">
+            <h3>📊 پنل معلم (نتایج ثبت‌شده کلاس)</h3>
+            <div style="overflow-x: auto;">
+                <table id="teacherTable">
+                    <thead>
+                        <tr>
+                            <th>نام قهرمان</th>
+                            <th>کلاس</th>
+                            <th>تعداد تلاش‌ها</th>
+                            <th>وضعیت</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <button class="btn" style="background: #475569; margin-top:20px;" onclick="resetGame()">شروع بازی جدید 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            title: "🌲 مرحله اول: ریسه‌کشی باغچه (راهبرد رسم شکل)",
+            text: "می‌خواهید دور یک باغچه مستطیل‌شکل به طول ۵ متر و عرض ۳ متر، چراغانی ریسه‌ای بکشید. اگر فاصله هر چراغ از هم ۱ متر باشد و در ۴ گوشه باغچه هم حتماً چراغ نصب شود، در کل به چند چراغ نیاز دارید؟",
+            correct: 16,
+            hint: "راهنمایی: محیط باغچه (۵+۵+۳+۳) رو حساب کن. چون چراغ‌ها در گوشه‌ها مشترک هستند، با رسم شکل تعداد دقیق رو به دست بیار!"
+        },
+        {
+            title: "🪙 مرحله دوم: ست لباس تولد (راهبرد الگوسازی)",
+            text: "شما ۳ مدل تی‌شرت (قرمز، آبی، زرد) و ۲ مدل شلوار (جین، کتان) در کمدتان دارید. چند حالت مختلف (ست لباس) بدون تکرار می‌توانید انتخاب کنید؟",
+            correct: 6,
+            hint: "راهنمایی: تعداد تی‌شرت‌ها را در تعداد شلوارها ضرب کنید (۳ × ۲)."
+        },
+        {
+            title: "🔐 مرحله سوم: رمز گاوصندوق (حذف حالت‌های نامطلوب)",
+            text: "رمز یک عدد ۳ رقمی است: رقم صدگان فرد است، رقم دهگان بزرگ‌تر از ۷ است، و جمع رقم‌ها برابر ۱۰ می‌شود. رقم یکان گاوصندوق چند است؟ (راهنمایی: دهگان می‌تواند ۸ یا ۹ باشد).",
+            correct: 1,
+            hint: "راهنمایی: اگر دهگان ۸ باشد، چون صدگان فرد است (مثلاً ۱)، جمع می‌شود ۹ و یکان باید ۱ باشد (۱۸۱). حالت‌های دیگر را بررسی کنید."
+        },
+        {
+            title: "🧱 مرحله چهارم: قلک پس‌انداز (راهبرد الگویابی)",
+            text: "شما از قلک خود روز اول ۲ هزار تومان، روز دوم ۴ هزار تومان، روز سوم ۶ هزار تومان و... پس‌انداز می‌کنید (هر روز ۲ هزار تومان بیشتر). در مجموع تا پایان روز پنجم، چند هزار تومان پس‌انداز کرده‌اید؟",
+            correct: 30,
+            hint: "راهنمایی: پول هر ۵ روز را بنویسید (۲+۴+۶+۸+۱۰) و جمع کل را حساب کنید."
+        },
+        {
+            title: "🎮 مرحله پنجم: مسابقات بازی آنلاین (امتیازات و متغیرها)",
+            text: "در یک بازی آنلاین، با هر برد ۵ امتیاز مثبت (+۵) و با هر باخت ۳ امتیاز منفی (-۳) می‌گیرید. اگر علی در طول بازی ۴ برد و ۳ باخت داشته باشد، امتیاز نهایی او چند می‌شود؟",
+            correct: 11,
+            hint: "راهنمایی: ۴ تا برد میشه ۴ تا مثبت ۵ (۲۰+) و ۳ تا باخت میشه ۳ تا منفی ۳ (۹-). حالا این دو مقدار را با هم جمع کنید (۲۰ + [۹-])."
+        }
+    ];
+
+    let currentQ = 0, totalAttempts = 0;
+    let student = { name: '', className: '' };
+
+    function startGame() {
+        const name = document.getElementById('studentName').value.trim();
+        const cls = document.getElementById('className').value.trim();
+        if (!name || !cls) { alert('لطفاً نام و کلاس خود را وارد کنید!'); return; }
+        student.name = name; student.className = cls;
+        document.getElementById('step-auth').classList.remove('active');
+        document.getElementById('step-game').classList.add('active');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('qTitle').innerText = q.title;
+        document.getElementById('qText').innerText = q.text;
+        document.getElementById('userAnswer').value = '';
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('checkBtn').style.display = 'block';
+        document.getElementById('progressFill').style.width = (currentQ / questions.length) * 100 + '%';
+    }
+
+    function checkAnswer() {
+        const ans = parseFloat(document.getElementById('userAnswer').value);
+        const q = questions[currentQ];
+        const fb = document.getElementById('feedback');
+        totalAttempts++;
+
+        if (ans === q.correct) {
+            fb.className = 'feedback success';
+            fb.innerText = '✨ آفرین قهرمان! پاسخ درست بود.';
+            fb.style.display = 'block';
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'block';
+        } else {
+            fb.className = 'feedback error';
+            fb.innerText = '❌ اشتباه بود! ' + q.hint;
+            fb.style.display = 'block';
+        }
+    }
+
+    function nextQuestion() {
+        currentQ++;
+        if (currentQ < questions.length) loadQuestion();
+        else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('step-game').classList.remove('active');
+        document.getElementById('step-finish').classList.add('active');
+
+        let data = JSON.parse(localStorage.getItem('ch1_daily_game') || '[]');
+        data.push({ name: student.name, className: student.className, attempts: totalAttempts });
+        localStorage.setItem('ch1_daily_game', JSON.stringify(data));
+
+        document.getElementById('summaryReport').innerHTML = `
+            <p><strong>👤 نام:</strong> ${student.name}</p>
+            <p><strong>🏫 کلاس:</strong> ${student.className}</p>
+            <p><strong>🎯 کل تلاش‌ها:</strong> ${totalAttempts} بار</p>
+        `;
+        renderTable();
+    }
+
+    function renderTable() {
+        let data = JSON.parse(localStorage.getItem('ch1_daily_game') || '[]');
+        const tbody = document.querySelector('#teacherTable tbody');
+        tbody.innerHTML = '';
+        data.forEach(item => {
+            tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.className}</td><td>${item.attempts}</td><td><span style="color:#34d399; font-weight:bold;">تکمیل شده 🏆</span></td></tr>`;
+        });
+    }
+
+    function resetGame() {
+        currentQ = 0; totalAttempts = 0;
+        document.getElementById('step-finish').classList.remove('active');
+        document.getElementById('step-auth').classList.add('active');
+        document.getElementById('studentName').value = '';
+        document.getElementById('className').value = '';
+    }
+</script>
+
+</body>
+</html>
